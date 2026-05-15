@@ -187,7 +187,7 @@ impl MethodResponse {
 
 		let kind = ResponseKind::MethodCall;
 
-		match serde_json::to_writer(&mut writer, &Response::new(rp.inner, id.clone())) {
+		match sonic_rs::to_writer(&mut writer, &Response::new(rp.inner, id.clone())) {
 			Ok(_) => {
 				// Safety - serde_json does not emit invalid UTF-8.
 				let result = unsafe { String::from_utf8_unchecked(writer.into_bytes()) };
@@ -546,6 +546,16 @@ impl io::Write for &mut BoundedWriter {
 
 	fn flush(&mut self) -> io::Result<()> {
 		Ok(())
+	}
+}
+
+impl sonic_rs::writer::WriteExt for &mut BoundedWriter {
+	fn reserve_with(&mut self, additional: usize) -> io::Result<&mut [std::mem::MaybeUninit<u8>]> {
+		self.buf.reserve_with(additional)
+	}
+
+	unsafe fn flush_len(&mut self, additional: usize) -> io::Result<()> {
+		unsafe{self.buf.flush_len(additional)}
 	}
 }
 

@@ -23,6 +23,7 @@ thiserror = { workspace = true }
 serde = { workspace = true, features = ["alloc"] }
 serde_json = { workspace = true, features = ["std", "raw_value"] }
 tracing = { workspace = true }
+sonic-rs = "0.5"
 
 # optional deps
 futures-util = { workspace = true, optional = true, features = ["alloc"] }
